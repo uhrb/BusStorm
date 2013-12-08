@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.Sockets", "BusStorm.Sockets.csproj", "{1B6F9617-9002-4582-B234-72EBFF02E8FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.Sockets.ClientConsole", "..\BusStorm.Sockets.ClientConsole\BusStorm.Sockets.ClientConsole.csproj", "{5B22DB5E-51EA-462E-96FB-9BA1FC117CC2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LoadTests", "LoadTests", "{527DD621-DA3F-4B01-A61F-35C46F533F72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.Sockets.ClientLoadTest", "BusStorm.Sockets.ClientLoadTest\BusStorm.Sockets.ClientLoadTest.csproj", "{807A46C8-2574-428E-82DD-3924B061A625}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.Sockets.ServerLoadTest", "BusStorm.Sockets.ServerLoadTest\BusStorm.Sockets.ServerLoadTest.csproj", "{0872B75F-53FC-4DA1-B156-008C29F6B2B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.Sockets.ServerConsole", "..\BusStorm.Sockets.ServerConsole\BusStorm.Sockets.ServerConsole.csproj", "{62CDB31C-75B1-4FD1-A2B5-E2C4E8304D95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B6F9617-9002-4582-B234-72EBFF02E8FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B6F9617-9002-4582-B234-72EBFF02E8FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B6F9617-9002-4582-B234-72EBFF02E8FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B6F9617-9002-4582-B234-72EBFF02E8FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B22DB5E-51EA-462E-96FB-9BA1FC117CC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B22DB5E-51EA-462E-96FB-9BA1FC117CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B22DB5E-51EA-462E-96FB-9BA1FC117CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B22DB5E-51EA-462E-96FB-9BA1FC117CC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{807A46C8-2574-428E-82DD-3924B061A625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{807A46C8-2574-428E-82DD-3924B061A625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{807A46C8-2574-428E-82DD-3924B061A625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{807A46C8-2574-428E-82DD-3924B061A625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0872B75F-53FC-4DA1-B156-008C29F6B2B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0872B75F-53FC-4DA1-B156-008C29F6B2B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0872B75F-53FC-4DA1-B156-008C29F6B2B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0872B75F-53FC-4DA1-B156-008C29F6B2B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62CDB31C-75B1-4FD1-A2B5-E2C4E8304D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62CDB31C-75B1-4FD1-A2B5-E2C4E8304D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62CDB31C-75B1-4FD1-A2B5-E2C4E8304D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62CDB31C-75B1-4FD1-A2B5-E2C4E8304D95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{807A46C8-2574-428E-82DD-3924B061A625} = {527DD621-DA3F-4B01-A61F-35C46F533F72}
+		{0872B75F-53FC-4DA1-B156-008C29F6B2B6} = {527DD621-DA3F-4B01-A61F-35C46F533F72}
+	EndGlobalSection
+EndGlobal

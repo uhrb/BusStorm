@@ -1,0 +1,33 @@
+﻿namespace BusStorm.Sockets
+{
+    public enum StandartCommands
+    {
+        YourId,
+        Ping,
+        ReplyGovernor,
+        Touch,
+        GetFileOpts,
+        GetOptions,
+        SetFilePart,
+        GetFilePart,
+        RunNoWait,
+        RunAndWait,
+        RunEx,
+        RunConsoleLineReaded,
+        RunConsoleWrite,
+        RunConsoleWriteLine,
+        RunConsoleClose,
+        RunConsoleClosed,
+        KillProcess,
+        MkDir,
+        DropFile,
+        DropDir,
+        ProcessKilled,
+        Version,
+        DirList,
+        UnknownCommand,
+        SetOption,
+        Success,
+        Fail
+    }
+}
