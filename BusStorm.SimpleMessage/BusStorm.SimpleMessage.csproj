@@ -46,7 +46,6 @@
     <Compile Include="BusCryptor.cs" />
     <Compile Include="BusExtensions.cs" />
     <Compile Include="BusMessage.cs" />
-    <Compile Include="IChannelWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleBusMessageProtocolFactory.cs" />
   </ItemGroup>
