@@ -157,9 +157,11 @@ namespace BusStorm.Sockets
         public BusMessage SendAndReceive(BusMessage message)
         {
             var seqid = message.SequenceId;
+            var fromAddress = message.From;
+            var toAddress = message.To;
             var eve = new ManualResetEvent(false);
             BusMessage received = null;
-            var sub = ReceivedMessages.SkipWhile(l => l.SequenceId != seqid).Take(1).Subscribe(next =>
+            var sub = ReceivedMessages.Where(l=>l.SequenceId == seqid && l.From == toAddress && l.To == fromAddress).Subscribe(next =>
                 {
                     received = next;
                     eve.Set();
