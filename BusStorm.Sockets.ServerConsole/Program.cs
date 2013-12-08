@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
+using BusStorm.SimpleMessage;
 
 namespace BusStorm.Sockets.ServerConsole
 {
@@ -16,7 +17,7 @@ namespace BusStorm.Sockets.ServerConsole
             }
             Console.Write("Ready to start server on 0.0.0.0:{0}. Press ENTER to start",portString);
             Console.ReadLine();
-            var server = new BusServerSocket(encKey);
+            var server = new BusServerSocket<BusMessage>(new SimpleBusMessageProtocolFactory(encKey));
             var disp = new CompositeDisposable();
             var sub2= server.Connections.Subscribe(next =>
                 {

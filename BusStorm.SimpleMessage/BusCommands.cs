@@ -1,4 +1,4 @@
-﻿namespace BusStorm.Sockets
+﻿namespace BusStorm.SimpleMessage
 {
     public enum BusCommands
     {

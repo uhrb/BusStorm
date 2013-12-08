@@ -10,31 +10,30 @@ using BusStorm.Logging;
 
 namespace BusStorm.Sockets
 {
-    public class BusClientConnection :IChannelWriter<BusMessage>
+    public class BusClientConnection<T> where T:BusStormMessageBase
     {
+        private readonly IProtocolFactory<T> _factory;
         private readonly long _connectionNumber;
-        private readonly Subject<BusMessage> _receivedMessages;
+        private readonly Subject<T> _receivedMessages;
         private readonly Subject<byte[]> _sendedBytes;
         private readonly List<byte> _currentReceiveBuffer;
-        private BusMessage _currentMessage;
+        private T _currentMessage;
         private readonly object _receiveLocker = new object();
         private long _messagesReceived;
-        private readonly string _encryptionKey;
 
-
-        protected BusClientConnection(string encryptionKey)
+        protected BusClientConnection(IProtocolFactory<T> factory)
         {
-            _encryptionKey = encryptionKey;
+            _factory = factory;
             Tracer.Log("Client connection created from protected ctor");
             _currentReceiveBuffer = new List<byte>();
-            _receivedMessages = new Subject<BusMessage>();
+            _receivedMessages = new Subject<T>();
             _sendedBytes = new Subject<byte[]>();
             Connected = false;
         }
 
         public bool Connected { get; protected set; }
 
-        internal BusClientConnection(Socket socket, long connectionNumber, string encryptionKey):this(encryptionKey)
+        internal BusClientConnection(Socket socket, long connectionNumber,IProtocolFactory<T> factory):this(factory)
         {
             Tracer.Log("Client connection created from internal ctor");
             _connectionNumber = connectionNumber;
@@ -47,7 +46,7 @@ namespace BusStorm.Sockets
 
         public long ConnectionNumber { get { return _connectionNumber; } }
 
-        public IObservable<BusMessage> ReceivedMessages { get { return _receivedMessages.ObserveOn(NewThreadScheduler.Default); }}
+        public IObservable<T> ReceivedMessages { get { return _receivedMessages.ObserveOn(NewThreadScheduler.Default); }}
 
         public IObservable<byte[]> SendedBytes { get { return _sendedBytes.ObserveOn(NewThreadScheduler.Default); } }
 
@@ -104,9 +103,9 @@ namespace BusStorm.Sockets
                 });
         }
 
-        public Task SendAsync(BusMessage message)
+        public Task SendAsync(T message)
         {
-            return SendAsync(message.ToByteArray(_encryptionKey));
+            return SendAsync(_factory.SerializeMessage(message));
         }
 
         private void ProcessReceive(SocketAsyncEventArgs e)
@@ -148,49 +147,53 @@ namespace BusStorm.Sockets
 
         private void CompleteConnection()
         {
-            _currentMessage = null;
+            _currentMessage = default(T);
             _currentReceiveBuffer.Clear();
             Connected = false;
             _receivedMessages.OnCompleted();
         }
 
-        public BusMessage SendAndReceive(BusMessage message)
-        {
-            var seqid = message.SequenceId;
-            var fromAddress = message.From;
-            var toAddress = message.To;
-            var eve = new ManualResetEvent(false);
-            BusMessage received = null;
-            var sub = ReceivedMessages.Where(l=>l.SequenceId == seqid && l.From == toAddress && l.To == fromAddress).Subscribe(next =>
-                {
-                    received = next;
-                    eve.Set();
-                });
-            SendAsync(message).Wait();
-            eve.WaitOne();
-            sub.Dispose();
-            return received;
-        }
-
-        public Task<BusMessage> SendAndReceiveAsync(BusMessage message)
-        {
-            return Task.Run(() => SendAndReceive(message));
-        }
-
         private void StartHeaderReceiving()
         {
             Tracer.Log("Client connection start new header");
-            if (_currentReceiveBuffer.Count < BusMessage.HeaderSize)
+            if (_currentReceiveBuffer.Count < _factory.HeaderSize)
             {
                 return;
             }
             // header in buffer, lets translate
-            var headerBytes = _currentReceiveBuffer.GetRange(0, BusMessage.HeaderSize).ToArray();
+            var headerBytes = _currentReceiveBuffer.GetRange(0, _factory.HeaderSize).ToArray();
             Tracer.Log("Client connection header received {0}",headerBytes.Length);
-            var msg = BusMessage.TransalteHeader(headerBytes);
+            var msg = _factory.MessageFactory();
+            _factory.TranslateHeader(headerBytes, msg);
             _currentMessage = msg;
             // remove header bytes from buffer
-            _currentReceiveBuffer.RemoveRange(0, BusMessage.HeaderSize);
+            _currentReceiveBuffer.RemoveRange(0, _factory.HeaderSize);
+        }
+
+
+        public IList<T> SendAndReceive(T message)
+        {
+            var eve = new ManualResetEvent(false);
+            var lst = new List<T>();
+            var msg = message;
+            var sub = ReceivedMessages.Where(l => _factory.ReceivedSequenceSelector(msg,l))
+                                .Subscribe(next =>
+                                    {
+                                        lst.Add(next);
+                                        if (!_factory.ReceiveMore(message, next))
+                                        {
+                                            eve.Set();    
+                                        }
+                                    });
+            SendAsync(message).Wait();
+            eve.WaitOne();
+            sub.Dispose();
+            return lst;
+        }
+
+        public Task<IList<T>> SendAndReceiveAsync(T message)
+        {
+            return Task.Run(() => SendAndReceive(message));
         }
 
         private void CheckMessageComplete()
@@ -201,19 +204,19 @@ namespace BusStorm.Sockets
                 return;
             }
             Tracer.Log("Client connection check payload receiving bytes");
-            if (_currentReceiveBuffer.Count < _currentMessage.OnWirePayloadLength)
+            if (_currentReceiveBuffer.Count < _currentMessage.OnWirePayloadSize)
             {
                 // payload receive is not complete
                 return;
             }
             // received payload
-            var payloadBytes = _currentReceiveBuffer.GetRange(0, _currentMessage.OnWirePayloadLength).ToArray();
+            var payloadBytes = _currentReceiveBuffer.GetRange(0, _currentMessage.OnWirePayloadSize).ToArray();
             Tracer.Log("Client connection payload received {0}",payloadBytes.Length);
             // translate payload
-            _currentMessage.TranslatePayload(payloadBytes,_encryptionKey);
+            _factory.TranslatePayload(payloadBytes,_currentMessage);
             var msg = _currentMessage;
             _currentMessage = null;
-            _currentReceiveBuffer.RemoveRange(0, msg.OnWirePayloadLength);
+            _currentReceiveBuffer.RemoveRange(0, msg.OnWirePayloadSize);
             _receivedMessages.OnNext(msg);
             var i = Interlocked.Increment(ref _messagesReceived);
             Tracer.Log("Client connection message complete {0}",i);

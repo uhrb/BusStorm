@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.Sockets.ServerCons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.Logging", "..\BusStorm.Logging\BusStorm.Logging.csproj", "{19E86EC5-579C-4C2E-92A0-38E76EE718DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusStorm.SimpleMessage", "..\BusStorm.SimpleMessage\BusStorm.SimpleMessage.csproj", "{0BCFAE8B-BEBE-4234-8E46-DBCEA3C19FB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{19E86EC5-579C-4C2E-92A0-38E76EE718DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19E86EC5-579C-4C2E-92A0-38E76EE718DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19E86EC5-579C-4C2E-92A0-38E76EE718DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BCFAE8B-BEBE-4234-8E46-DBCEA3C19FB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BCFAE8B-BEBE-4234-8E46-DBCEA3C19FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BCFAE8B-BEBE-4234-8E46-DBCEA3C19FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BCFAE8B-BEBE-4234-8E46-DBCEA3C19FB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

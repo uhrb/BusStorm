@@ -10,20 +10,20 @@ using BusStorm.Logging;
 
 namespace BusStorm.Sockets
 {
-    public class BusServerSocket
+    public class BusServerSocket<T> where T :BusStormMessageBase
     {
+        private readonly IProtocolFactory<T> _factory;
         private Socket _sock;
 
-        private readonly Subject<BusClientConnection> _connectionsSubject;
+        private readonly Subject<BusClientConnection<T>> _connectionsSubject;
 
         private long _connectionCounter;
-        private readonly string _encryptionKey;
 
-        public BusServerSocket(string encryptionKey)
+        public BusServerSocket(IProtocolFactory<T> factory)
         {
-            _encryptionKey = encryptionKey;
+            _factory = factory;
             Tracer.Log("Server socket created with public ctor");
-            _connectionsSubject = new Subject<BusClientConnection>();
+            _connectionsSubject = new Subject<BusClientConnection<T>>();
             _connectionCounter = 0;
             Connected = false;
         }
@@ -40,7 +40,7 @@ namespace BusStorm.Sockets
             StartAccept();
         }
 
-        public IObservable<BusClientConnection> Connections { get { return _connectionsSubject.ObserveOn(NewThreadScheduler.Default); } } 
+        public IObservable<BusClientConnection<T>> Connections { get { return _connectionsSubject.ObserveOn(NewThreadScheduler.Default); } } 
 
         private void StartAccept()
         {
@@ -74,7 +74,7 @@ namespace BusStorm.Sockets
             if (e.SocketError == SocketError.Success)
             {
                 Interlocked.Increment(ref _connectionCounter);
-                var client = new BusClientConnection(e.AcceptSocket,_connectionCounter,_encryptionKey);
+                var client = new BusClientConnection<T>(e.AcceptSocket,_connectionCounter,_factory);
                 _connectionsSubject.OnNext(client);
             }
             else

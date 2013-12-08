@@ -54,15 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusStormMessageBase.cs" />
     <Compile Include="BusClientConnection.cs" />
     <Compile Include="BusClientSocket.cs" />
-    <Compile Include="BusCryptor.cs" />
-    <Compile Include="BusExtensions.cs" />
-    <Compile Include="BusMessage.cs" />
     <Compile Include="BusServerSocket.cs" />
-    <Compile Include="IChannelWriter.cs" />
+    <Compile Include="IProtocolFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BusCommands.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

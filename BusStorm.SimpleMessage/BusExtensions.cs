@@ -1,4 +1,6 @@
-﻿namespace BusStorm.Sockets
+﻿using BusStorm.Sockets;
+
+namespace BusStorm.SimpleMessage
 {
     public static class BusExtensions
     {
@@ -13,5 +15,9 @@
                 return BusCommands.UnknownCommand;
             }    
         }
+
+    
+        //public static 
     }
+
 }

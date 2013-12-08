@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using BusStorm.SimpleMessage;
 
 namespace BusStorm.Sockets.ServerLoadTest
 {
@@ -57,7 +58,7 @@ namespace BusStorm.Sockets.ServerLoadTest
         {
             var sleep = (int) state;
             var clientId = Guid.NewGuid();
-            var client = new BusClientSocket(_hostString, Convert.ToInt32(_portString),EncKey);
+            var client = new BusClientSocket<BusMessage>(_hostString, Convert.ToInt32(_portString),new SimpleBusMessageProtocolFactory(EncKey));
             client.Connect();
             try
             {
@@ -74,7 +75,7 @@ namespace BusStorm.Sockets.ServerLoadTest
                             message = "Hello from client!"
                         }
                     });
-                    Console.WriteLine("Reply was {0}",msg.Command);
+                    Console.WriteLine("Reply was {0}",msg[0].Command);
                     Thread.Sleep(sleep);
                 }
             }
@@ -92,7 +93,7 @@ namespace BusStorm.Sockets.ServerLoadTest
         {
             var sleep = (int)state;
             var clientId = Guid.NewGuid();
-            var client = new BusClientSocket(_hostString, Convert.ToInt32(_portString),EncKey);
+            var client = new BusClientSocket<BusMessage>(_hostString, Convert.ToInt32(_portString),new SimpleBusMessageProtocolFactory(EncKey));
             client.Connect();
             try
             {

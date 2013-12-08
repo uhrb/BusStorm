@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using BusStorm.SimpleMessage;
 
 namespace BusStorm.Sockets.ClientLoadTest
 {
     public class Program
     {
 
-        private static readonly List<BusClientConnection> Connections = new List<BusClientConnection>();
+        private static readonly List<BusClientConnection<BusMessage>> Connections = new List<BusClientConnection<BusMessage>>();
         private static readonly Guid ServerId = Guid.NewGuid();
         private const string EncKey = "networkpassword";
 
@@ -27,7 +28,7 @@ namespace BusStorm.Sockets.ClientLoadTest
             }
             Console.Write("Ready to start server on 0.0.0.0:{0}. Press ENTER to start", portString);
             Console.ReadLine();
-            var server = new BusServerSocket(EncKey);
+            var server = new BusServerSocket<BusMessage>(new SimpleBusMessageProtocolFactory(EncKey));
             server.Connections.Subscribe(next =>
                 {
                     Console.WriteLine("New connection accepted {0}", next.ConnectionNumber);
@@ -65,7 +66,7 @@ namespace BusStorm.Sockets.ClientLoadTest
             {
                 while (true)
                 {
-                    BusClientConnection[] cons;
+                    BusClientConnection<BusMessage>[] cons;
                     lock (Connections)
                     {
                         cons = Connections.ToArray();

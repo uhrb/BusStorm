@@ -1,4 +1,5 @@
 ﻿using System;
+using BusStorm.SimpleMessage;
 
 namespace BusStorm.Sockets.ClientConsole
 {
@@ -22,7 +23,7 @@ namespace BusStorm.Sockets.ClientConsole
             }
             Console.Write("Ready to connect to {0}:{1}. Press ENTER to connect...",hostString,portString);
             Console.ReadLine();
-            var client = new BusClientSocket(hostString, Convert.ToInt32(portString),encKey);
+            var client = new BusClientSocket<BusMessage>(hostString, Convert.ToInt32(portString),new SimpleBusMessageProtocolFactory(encKey));
             client.Connect();
             string userInput;
             Console.Write(">");

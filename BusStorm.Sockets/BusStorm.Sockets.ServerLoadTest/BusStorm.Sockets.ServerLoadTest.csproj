@@ -48,6 +48,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BusStorm.SimpleMessage\BusStorm.SimpleMessage.csproj">
+      <Project>{0BCFAE8B-BEBE-4234-8E46-DBCEA3C19FB2}</Project>
+      <Name>BusStorm.SimpleMessage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BusStorm.Sockets.csproj">
       <Project>{1B6F9617-9002-4582-B234-72EBFF02E8FB}</Project>
       <Name>BusStorm.Sockets</Name>

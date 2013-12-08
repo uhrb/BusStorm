@@ -3,12 +3,12 @@ using BusStorm.Logging;
 
 namespace BusStorm.Sockets
 {
-    public class BusClientSocket : BusClientConnection
+    public class BusClientSocket<T> : BusClientConnection<T> where T:BusStormMessageBase
     {
         private readonly string _host;
         private readonly int _port;
 
-        public BusClientSocket(string host, int port,string encryptionKey):base(encryptionKey)
+        public BusClientSocket(string host, int port,IProtocolFactory<T> factory):base(factory)
         {
             Tracer.Log("Client socket created with {0} {1}", host, port);
             _host = host;

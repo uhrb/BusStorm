@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BusStorm.Sockets
+namespace BusStorm.SimpleMessage
 {
     internal class BusCryptor
     {
