@@ -2,21 +2,29 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using BusStorm.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BusStorm.Sockets
 {
-    public class ProtocolMessage
+    public class BusMessage
     {
         private static readonly int GuidSize;
 
-        public static int HeaderSize { get; private set; }
+        public static readonly Guid BROADCAST = Guid.Empty;
 
-        static ProtocolMessage()
+        internal static int HeaderSize { get; private set; }
+
+        static BusMessage()
         {
             GuidSize = Guid.NewGuid().ToByteArray().Length;
             HeaderSize = GuidSize*3 + sizeof (int) + sizeof (bool) + sizeof (int);
+        }
+
+        public BusMessage()
+        {
+            IsManualPayload = false;
         }
 
         public Guid From { get; set; }
@@ -25,7 +33,7 @@ namespace BusStorm.Sockets
 
         public Guid SequenceId { get; set; }
 
-        public  StandartCommands Command { get; set; }
+        public  BusCommands Command { get; set; }
 
         public bool IsManualPayload { get; set; }
 
@@ -35,6 +43,7 @@ namespace BusStorm.Sockets
 
         internal byte[] ToByteArray()
         {
+            Tracer.Log("Protocol message to byte array conversion fired");
             byte[] smBytes;
             if (Payload == null)
             {
@@ -57,8 +66,7 @@ namespace BusStorm.Sockets
                 }
             }
             OnWirePayloadLength = smBytes.Length;
-            return
-                    To.ToByteArray()
+                  var bb =   To.ToByteArray()
                     .Concat(From.ToByteArray())
                     .Concat(SequenceId.ToByteArray())
                     .Concat(BitConverter.GetBytes((int)Command))
@@ -66,9 +74,11 @@ namespace BusStorm.Sockets
                     .Concat(BitConverter.GetBytes(smBytes.Length))
                     .Concat(smBytes)
                     .ToArray();
+            Tracer.Log("Protocol message converted to {0} bytes",bb.Length);
+            return bb;
         }
 
-        internal static ProtocolMessage TransalteHeader(byte[] header)
+        internal static BusMessage TransalteHeader(byte[] header)
         {
             var toBytes = new byte[GuidSize];
             var fromBytes = new byte[GuidSize];
@@ -82,7 +92,7 @@ namespace BusStorm.Sockets
             Array.Copy(header,GuidSize*3,commandBytes,0,commandBytes.Length);
             Array.Copy(header,GuidSize*3+sizeof(int),isManualBytes,0,isManualBytes.Length);
             Array.Copy(header,GuidSize*3+sizeof(int)+sizeof(bool),payloadLengthBytes,0,payloadLengthBytes.Length);
-            return new ProtocolMessage
+            return new BusMessage
                 {
                     Command = BitConverter.ToInt32(commandBytes, 0).AsCommand(),
                     From = new Guid(fromBytes),

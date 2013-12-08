@@ -1,6 +1,6 @@
 ﻿namespace BusStorm.Sockets
 {
-    public enum StandartCommands
+    public enum BusCommands
     {
         YourId,
         Ping,

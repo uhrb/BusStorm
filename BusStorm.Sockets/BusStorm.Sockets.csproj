@@ -54,16 +54,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientConnection.cs" />
-    <Compile Include="ClientSocket.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="ProtocolMessage.cs" />
-    <Compile Include="ServerSocket.cs" />
+    <Compile Include="BusClientConnection.cs" />
+    <Compile Include="BusClientSocket.cs" />
+    <Compile Include="BusExtensions.cs" />
+    <Compile Include="BusMessage.cs" />
+    <Compile Include="BusServerSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StandartCommands.cs" />
+    <Compile Include="BusCommands.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusStorm.Logging\BusStorm.Logging.csproj">
+      <Project>{19E86EC5-579C-4C2E-92A0-38E76EE718DC}</Project>
+      <Name>BusStorm.Logging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
