@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace BusStorm.SimpleMessage
 {
-    public class SimpleBusMessageProtocolFactory : IProtocolFactory<BusMessage>
+    public class SimpleBusMessageBusProtocolFactory : IBusProtocolFactory<BusMessage>
     {
 
         private static readonly int GuidSize;
@@ -17,13 +17,13 @@ namespace BusStorm.SimpleMessage
         private static readonly int StaticHeaderSize;
         private readonly string _encryptionKey;
 
-        static SimpleBusMessageProtocolFactory()
+        static SimpleBusMessageBusProtocolFactory()
         {
             GuidSize = Guid.NewGuid().ToByteArray().Length;
             StaticHeaderSize= GuidSize*3 + sizeof (int) + sizeof (bool) + sizeof (int);
         }
 
-        public SimpleBusMessageProtocolFactory(string encryptionKey)
+        public SimpleBusMessageBusProtocolFactory(string encryptionKey)
         {
             _encryptionKey = encryptionKey;
         }
@@ -118,17 +118,6 @@ namespace BusStorm.SimpleMessage
               .ToArray();
             Tracer.Log("Protocol message converted to {0} bytes", bb.Length);
             return bb;
-        }
-
-        public bool ReceivedSequenceSelector(BusMessage sendedMessage,BusMessage message)
-        {
-            return message.SequenceId == sendedMessage.SequenceId && message.From == sendedMessage.To &&
-                   message.To == sendedMessage.From;
-        }
-
-        public bool ReceiveMore(BusMessage sendedMessage, BusMessage message)
-        {
-            return false;
         }
     }
 }

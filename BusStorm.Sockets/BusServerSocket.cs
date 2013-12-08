@@ -12,14 +12,14 @@ namespace BusStorm.Sockets
 {
     public class BusServerSocket<T> where T :BusStormMessageBase
     {
-        private readonly IProtocolFactory<T> _factory;
+        private readonly IBusProtocolFactory<T> _factory;
         private Socket _sock;
 
         private readonly Subject<BusClientConnection<T>> _connectionsSubject;
 
         private long _connectionCounter;
 
-        public BusServerSocket(IProtocolFactory<T> factory)
+        public BusServerSocket(IBusProtocolFactory<T> factory)
         {
             _factory = factory;
             Tracer.Log("Server socket created with public ctor");

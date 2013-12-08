@@ -8,7 +8,7 @@ namespace BusStorm.Sockets
         private readonly string _host;
         private readonly int _port;
 
-        public BusClientSocket(string host, int port,IProtocolFactory<T> factory):base(factory)
+        public BusClientSocket(string host, int port,IBusProtocolFactory<T> factory):base(factory)
         {
             Tracer.Log("Client socket created with {0} {1}", host, port);
             _host = host;

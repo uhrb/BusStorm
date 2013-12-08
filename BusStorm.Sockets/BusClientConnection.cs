@@ -12,7 +12,7 @@ namespace BusStorm.Sockets
 {
     public class BusClientConnection<T> where T:BusStormMessageBase
     {
-        private readonly IProtocolFactory<T> _factory;
+        private readonly IBusProtocolFactory<T> _factory;
         private readonly long _connectionNumber;
         private readonly Subject<T> _receivedMessages;
         private readonly Subject<byte[]> _sendedBytes;
@@ -21,7 +21,7 @@ namespace BusStorm.Sockets
         private readonly object _receiveLocker = new object();
         private long _messagesReceived;
 
-        protected BusClientConnection(IProtocolFactory<T> factory)
+        protected BusClientConnection(IBusProtocolFactory<T> factory)
         {
             _factory = factory;
             Tracer.Log("Client connection created from protected ctor");
@@ -33,7 +33,7 @@ namespace BusStorm.Sockets
 
         public bool Connected { get; protected set; }
 
-        internal BusClientConnection(Socket socket, long connectionNumber,IProtocolFactory<T> factory):this(factory)
+        internal BusClientConnection(Socket socket, long connectionNumber,IBusProtocolFactory<T> factory):this(factory)
         {
             Tracer.Log("Client connection created from internal ctor");
             _connectionNumber = connectionNumber;
@@ -168,32 +168,6 @@ namespace BusStorm.Sockets
             _currentMessage = msg;
             // remove header bytes from buffer
             _currentReceiveBuffer.RemoveRange(0, _factory.HeaderSize);
-        }
-
-
-        public IList<T> SendAndReceive(T message)
-        {
-            var eve = new ManualResetEvent(false);
-            var lst = new List<T>();
-            var msg = message;
-            var sub = ReceivedMessages.Where(l => _factory.ReceivedSequenceSelector(msg,l))
-                                .Subscribe(next =>
-                                    {
-                                        lst.Add(next);
-                                        if (!_factory.ReceiveMore(message, next))
-                                        {
-                                            eve.Set();    
-                                        }
-                                    });
-            SendAsync(message).Wait();
-            eve.WaitOne();
-            sub.Dispose();
-            return lst;
-        }
-
-        public Task<IList<T>> SendAndReceiveAsync(T message)
-        {
-            return Task.Run(() => SendAndReceive(message));
         }
 
         private void CheckMessageComplete()

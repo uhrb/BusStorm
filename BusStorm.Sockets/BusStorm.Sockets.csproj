@@ -58,7 +58,8 @@
     <Compile Include="BusClientConnection.cs" />
     <Compile Include="BusClientSocket.cs" />
     <Compile Include="BusServerSocket.cs" />
-    <Compile Include="IProtocolFactory.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="IBusProtocolFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
