@@ -17,9 +17,11 @@ namespace BusStorm.Sockets
         private readonly Subject<BusClientConnection> _connectionsSubject;
 
         private long _connectionCounter;
+        private readonly string _encryptionKey;
 
-        public BusServerSocket()
+        public BusServerSocket(string encryptionKey)
         {
+            _encryptionKey = encryptionKey;
             Tracer.Log("Server socket created with public ctor");
             _connectionsSubject = new Subject<BusClientConnection>();
             _connectionCounter = 0;
@@ -72,7 +74,7 @@ namespace BusStorm.Sockets
             if (e.SocketError == SocketError.Success)
             {
                 Interlocked.Increment(ref _connectionCounter);
-                var client = new BusClientConnection(e.AcceptSocket,_connectionCounter);
+                var client = new BusClientConnection(e.AcceptSocket,_connectionCounter,_encryptionKey);
                 _connectionsSubject.OnNext(client);
             }
             else

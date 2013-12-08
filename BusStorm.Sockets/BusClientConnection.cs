@@ -10,7 +10,7 @@ using BusStorm.Logging;
 
 namespace BusStorm.Sockets
 {
-    public class BusClientConnection
+    public class BusClientConnection :IChannelWriter<BusMessage>
     {
         private readonly long _connectionNumber;
         private readonly Subject<BusMessage> _receivedMessages;
@@ -19,10 +19,12 @@ namespace BusStorm.Sockets
         private BusMessage _currentMessage;
         private readonly object _receiveLocker = new object();
         private long _messagesReceived;
+        private readonly string _encryptionKey;
 
 
-        protected BusClientConnection()
+        protected BusClientConnection(string encryptionKey)
         {
+            _encryptionKey = encryptionKey;
             Tracer.Log("Client connection created from protected ctor");
             _currentReceiveBuffer = new List<byte>();
             _receivedMessages = new Subject<BusMessage>();
@@ -32,7 +34,7 @@ namespace BusStorm.Sockets
 
         public bool Connected { get; protected set; }
 
-        internal BusClientConnection(Socket socket, long connectionNumber):this()
+        internal BusClientConnection(Socket socket, long connectionNumber, string encryptionKey):this(encryptionKey)
         {
             Tracer.Log("Client connection created from internal ctor");
             _connectionNumber = connectionNumber;
@@ -104,7 +106,7 @@ namespace BusStorm.Sockets
 
         public Task SendAsync(BusMessage message)
         {
-            return SendAsync(message.ToByteArray());
+            return SendAsync(message.ToByteArray(_encryptionKey));
         }
 
         private void ProcessReceive(SocketAsyncEventArgs e)
@@ -206,7 +208,7 @@ namespace BusStorm.Sockets
             var payloadBytes = _currentReceiveBuffer.GetRange(0, _currentMessage.OnWirePayloadLength).ToArray();
             Tracer.Log("Client connection payload received {0}",payloadBytes.Length);
             // translate payload
-            _currentMessage.TranslatePayload(payloadBytes);
+            _currentMessage.TranslatePayload(payloadBytes,_encryptionKey);
             var msg = _currentMessage;
             _currentMessage = null;
             _currentReceiveBuffer.RemoveRange(0, msg.OnWirePayloadLength);

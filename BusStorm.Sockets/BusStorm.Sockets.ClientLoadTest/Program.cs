@@ -9,6 +9,7 @@ namespace BusStorm.Sockets.ClientLoadTest
 
         private static readonly List<BusClientConnection> Connections = new List<BusClientConnection>();
         private static readonly Guid ServerId = Guid.NewGuid();
+        private const string EncKey = "networkpassword";
 
         static void Main()
         {
@@ -26,7 +27,7 @@ namespace BusStorm.Sockets.ClientLoadTest
             }
             Console.Write("Ready to start server on 0.0.0.0:{0}. Press ENTER to start", portString);
             Console.ReadLine();
-            var server = new BusServerSocket();
+            var server = new BusServerSocket(EncKey);
             server.Connections.Subscribe(next =>
                 {
                     Console.WriteLine("New connection accepted {0}", next.ConnectionNumber);

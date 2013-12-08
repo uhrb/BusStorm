@@ -8,7 +8,7 @@ namespace BusStorm.Sockets
         private readonly string _host;
         private readonly int _port;
 
-        public BusClientSocket(string host, int port)
+        public BusClientSocket(string host, int port,string encryptionKey):base(encryptionKey)
         {
             Tracer.Log("Client socket created with {0} {1}", host, port);
             _host = host;

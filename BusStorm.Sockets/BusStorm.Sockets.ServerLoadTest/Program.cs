@@ -8,12 +8,13 @@ namespace BusStorm.Sockets.ServerLoadTest
     {
         private static string _hostString;
         private static string _portString;
+        private const string EncKey = "networkpassword";
 
         public static void Main()
         {
             _hostString = "localhost";
             _portString = "10137";
-            string connectionString = "10";
+            var connectionString = "10";
             Console.Write("Enter host ({0}):", _hostString);
             if (string.IsNullOrEmpty(_hostString = Console.ReadLine()))
             {
@@ -56,7 +57,7 @@ namespace BusStorm.Sockets.ServerLoadTest
         {
             var sleep = (int) state;
             var clientId = Guid.NewGuid();
-            var client = new BusClientSocket(_hostString, Convert.ToInt32(_portString));
+            var client = new BusClientSocket(_hostString, Convert.ToInt32(_portString),EncKey);
             client.Connect();
             try
             {
@@ -91,7 +92,7 @@ namespace BusStorm.Sockets.ServerLoadTest
         {
             var sleep = (int)state;
             var clientId = Guid.NewGuid();
-            var client = new BusClientSocket(_hostString, Convert.ToInt32(_portString));
+            var client = new BusClientSocket(_hostString, Convert.ToInt32(_portString),EncKey);
             client.Connect();
             try
             {

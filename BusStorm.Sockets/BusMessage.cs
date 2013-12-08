@@ -41,7 +41,7 @@ namespace BusStorm.Sockets
 
         public dynamic Payload { get; set; }
 
-        internal byte[] ToByteArray()
+        internal byte[] ToByteArray(string encryptionKey)
         {
             Tracer.Log("Protocol message to byte array conversion fired");
             byte[] smBytes;
@@ -65,6 +65,9 @@ namespace BusStorm.Sockets
                     }
                 }
             }
+
+            smBytes = new BusCryptor().EncryptData(smBytes, encryptionKey);
+
             OnWirePayloadLength = smBytes.Length;
                   var bb =   To.ToByteArray()
                     .Concat(From.ToByteArray())
@@ -103,19 +106,26 @@ namespace BusStorm.Sockets
                 };
         }
 
-        public void TranslatePayload(byte[] payloadBytes)
+        public void TranslatePayload(byte[] payloadBytes,string encryptionKey)
         {
             if (OnWirePayloadLength == 0)
             {
                 return;
             }
 
+            var bytes = new BusCryptor().DecryptData(payloadBytes, encryptionKey);
+
             if (IsManualPayload)
             {
                 Payload = payloadBytes;
             }
 
-            Payload = JObject.Parse(Encoding.UTF8.GetString(payloadBytes));
+            if (bytes.Length == 0)
+            {
+                return;
+            }
+
+            Payload = JObject.Parse(Encoding.UTF8.GetString(bytes));
         }
     }
 }

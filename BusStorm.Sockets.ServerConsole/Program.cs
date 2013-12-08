@@ -8,6 +8,7 @@ namespace BusStorm.Sockets.ServerConsole
         public static void Main()
         {
             var portString = "10137";
+            const string encKey = "networkpassword";
             Console.Write("Enter port ({0}):",portString);
             if (string.IsNullOrEmpty(portString = Console.ReadLine()))
             {
@@ -15,7 +16,7 @@ namespace BusStorm.Sockets.ServerConsole
             }
             Console.Write("Ready to start server on 0.0.0.0:{0}. Press ENTER to start",portString);
             Console.ReadLine();
-            var server = new BusServerSocket();
+            var server = new BusServerSocket(encKey);
             var disp = new CompositeDisposable();
             var sub2= server.Connections.Subscribe(next =>
                 {

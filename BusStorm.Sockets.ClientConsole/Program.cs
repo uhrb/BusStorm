@@ -9,6 +9,7 @@ namespace BusStorm.Sockets.ClientConsole
             var clientId = Guid.NewGuid();
             var hostString = "localhost";
             var portString = "10137";
+            const string encKey = "networkpassword";
             Console.Write("Enter host ({0}):",hostString);
             if (string.IsNullOrEmpty(hostString = Console.ReadLine()))
             {
@@ -21,7 +22,7 @@ namespace BusStorm.Sockets.ClientConsole
             }
             Console.Write("Ready to connect to {0}:{1}. Press ENTER to connect...",hostString,portString);
             Console.ReadLine();
-            var client = new BusClientSocket(hostString, Convert.ToInt32(portString));
+            var client = new BusClientSocket(hostString, Convert.ToInt32(portString),encKey);
             client.Connect();
             string userInput;
             Console.Write(">");
