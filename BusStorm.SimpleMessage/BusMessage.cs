@@ -3,10 +3,9 @@ using BusStorm.Sockets;
 
 namespace BusStorm.SimpleMessage
 {
-
-    public class BusMessage :BusStormMessageBase
-    {
-        public static readonly Guid BROADCAST = Guid.Empty;
+  public class BusMessage : BusStormMessageBase
+  {
+    public static readonly Guid BROADCAST = Guid.Empty;
 
         public BusMessage()
         {

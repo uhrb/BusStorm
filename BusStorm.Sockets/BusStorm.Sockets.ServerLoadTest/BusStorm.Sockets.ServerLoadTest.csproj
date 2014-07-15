@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BusStorm.SimpleMessage\BusStorm.SimpleMessage.csproj">
-      <Project>{0BCFAE8B-BEBE-4234-8E46-DBCEA3C19FB2}</Project>
+      <Project>{0bcfae8b-bebe-4234-8e46-dbcea3c19fb2}</Project>
       <Name>BusStorm.SimpleMessage</Name>
     </ProjectReference>
     <ProjectReference Include="..\BusStorm.Sockets.csproj">

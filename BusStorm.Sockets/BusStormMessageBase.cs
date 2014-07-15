@@ -1,7 +1,7 @@
 ﻿namespace BusStorm.Sockets
 {
-    public abstract class BusStormMessageBase
-    {
-        public int OnWirePayloadSize { get; set; }
-    }
+  public abstract class BusStormMessageBase
+  {
+    public int OnWirePayloadSize { get; set; }
+  }
 }

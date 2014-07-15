@@ -1,6 +1,6 @@
 ﻿namespace BusStorm.Sockets
 {
-    public interface IBusProtocolFactory<T> where T: BusStormMessageBase
+    public interface IBusProtocolFactory<T> where T : BusStormMessageBase
     {
         int HeaderSize { get; }
         T MessageFactory();

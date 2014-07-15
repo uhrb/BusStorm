@@ -5,25 +5,27 @@ namespace BusStorm.Sockets.ClientConsole
 {
     public class Program
     {
-        static void Main()
+        public static void Main()
         {
             var clientId = Guid.NewGuid();
             var hostString = "localhost";
             var portString = "10137";
             const string encKey = "networkpassword";
-            Console.Write("Enter host ({0}):",hostString);
+            Console.Write("Enter host ({0}):", hostString);
             if (string.IsNullOrEmpty(hostString = Console.ReadLine()))
             {
                 hostString = "localhost";
             }
-            Console.Write("Enter port ({0}):",portString);
+
+            Console.Write("Enter port ({0}):", portString);
             if (string.IsNullOrEmpty(portString = Console.ReadLine()))
             {
                 portString = "10137";
             }
-            Console.Write("Ready to connect to {0}:{1}. Press ENTER to connect...",hostString,portString);
+
+            Console.Write("Ready to connect to {0}:{1}. Press ENTER to connect...", hostString, portString);
             Console.ReadLine();
-            var client = new BusClientSocket<BusMessage>(hostString, Convert.ToInt32(portString),new SimpleBusMessageProtocolFactory(encKey));
+            var client = new BusClientSocket<BusMessage>(hostString, Convert.ToInt32(portString), new SimpleBusMessageBusProtocolFactory(encKey));
             client.Connect();
             string userInput;
             Console.Write(">");
@@ -31,7 +33,6 @@ namespace BusStorm.Sockets.ClientConsole
             {
                 switch (userInput)
                 {
-
                     case "r":
                         client.SendAsync(new BusMessage
                             {
@@ -55,8 +56,10 @@ namespace BusStorm.Sockets.ClientConsole
                         });
                         break;
                 }
+
                 Console.Write("\n>");
             }
+
             client.Disconnect();
             Console.Write("Connection complete. Press Enter to exit.");
             Console.ReadLine();
